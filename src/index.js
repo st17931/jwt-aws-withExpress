@@ -131,8 +131,20 @@ server.post('/login',async(req,res)=>{
                 message:"Success",
                 jwt_token: userPresentFlag.accessTok
               })
+            }else{
+              res.send({
+                message:"Not authorized"
+              })
             }
+        }else{
+          res.send({
+            message:"Wrong Password"
+          })
         }
+      }else{
+        res.send({
+          message:"pls register"
+        })
       }
 })
 

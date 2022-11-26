@@ -4,6 +4,13 @@ const cookieParser =require('cookie-parser');
 const jwt = require('jsonwebtoken');
 const { MongoClient } = require('mongodb');
 const nodemailer = require('nodemailer');
+const bodyParser = require('body-parser');
+const multer  = require('multer')
+const upload = multer({ dest: 'uploads/' })
+const { uploadFile,getFileStream } = require('./s3');
+
+
+
 
 
 const server = express();
@@ -148,7 +155,22 @@ server.post('/login',async(req,res)=>{
       }
 })
 
+server.get('/images/:key',(req,res)=>{
+  const key = req.params.key;
+  const readStream = getFileStream(key);
+  readStream.pipe(res);
+})
 
+
+server.post('/upload', upload.single('image'),async function (req, res) {
+      const file = req.file;
+      console.log(file);
+      const result = await uploadFile(file);
+      res.send({
+        message: "Success",
+        result: result
+      })
+})
 
 
 
